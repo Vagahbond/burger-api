@@ -1,0 +1,32 @@
+{
+  "name": "burger-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.ts",
+  "scripts": {
+    "start": "babel-node . --extensions .ts",
+    "dev": "nodemon --exec babel-node . --extensions .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vagahbond/burger-api.git"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Vagahbond/burger-api/issues"
+  },
+  "homepage": "https://github.com/Vagahbond/burger-api#readme",
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-typescript": "^7.8.3",
+    "@babel/runtime": "^7.8.7",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "@babel/node": "^7.8.7"
+  }
+}
