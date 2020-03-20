@@ -29,6 +29,7 @@
     "@types/helmet": "0.0.45",
     "@types/mongoose": "^5.7.6",
     "@types/validator": "^12.0.1",
+    "@types/xregexp": "^3.0.30",
     "nodemon": "^2.0.2"
   },
   "dependencies": {
@@ -39,6 +40,7 @@
     "express": "^4.17.1",
     "helmet": "^3.21.3",
     "mongoose": "^5.9.5",
-    "validator": "^13.0.0"
+    "validator": "^13.0.0",
+    "xregexp": "^4.3.0"
   }
 }
