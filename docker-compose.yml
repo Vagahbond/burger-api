@@ -1,0 +1,36 @@
+version: "3"
+services:
+  api:
+    build: .
+    container_name: burger-api
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - private
+    command: npm run dev
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      DB_NAME: burger-api
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    container_name: burger-api-mongo
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - private
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongo-data:
+
+networks:
+  private:
