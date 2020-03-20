@@ -114,3 +114,4 @@ dist
 .pnp.*
 
 .env
+!.env.example
