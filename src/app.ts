@@ -3,9 +3,11 @@ import express from 'express'
 import helmet from 'helmet'
 import body_parser from 'body-parser'
 
+import * as db from './db'
 import * as routes from './routes'
 
 dotenv.config()
+db.connect()
 
 const app = express()
 
