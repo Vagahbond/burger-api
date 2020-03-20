@@ -1,6 +1,6 @@
 import db from '../db'
 
-enum UserLevel {
+export enum UserLevel {
     Customer,
     Preparator,
     Admin,
