@@ -9,10 +9,7 @@ services:
     networks:
       - private
     command: npm run dev
-    environment:
-      MONGO_URL: mongodb://mongo:27017
-      DB_NAME: burger-api
-      NODE_ENV: development
+    env_file: .env
     ports:
       - "3000:3000"
     depends_on:
@@ -26,8 +23,6 @@ services:
       - mongo-data:/data/db
     networks:
       - private
-    ports:
-      - "27017:27017"
 
 volumes:
   mongo-data:
