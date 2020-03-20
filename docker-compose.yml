@@ -20,7 +20,7 @@ services:
     links:
       - mongo
   mongo:
-    image: mongo
+    image: mongo:4.2
     container_name: burger-api-mongo
     volumes:
       - mongo-data:/data/db
