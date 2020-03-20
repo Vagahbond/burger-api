@@ -19,3 +19,25 @@ router.get('/products', async (req, res) => {
         })
     }
 })
+
+router.get('/product/:id', async (req, res) => {
+    try {
+        const searched_product = await product.model.findOne({ id: req.params.id })
+        if (searched_product === null) {
+            res.status(404).json({
+                success: false,
+                error: 'Product was not found.',
+            })
+        } else {
+            res.json({
+                success: true,
+                product: searched_product,
+            })
+        }
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: 'Unable to get product',
+        })
+    }
+})
