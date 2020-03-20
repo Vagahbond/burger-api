@@ -15,3 +15,15 @@ export const schema = new db.Schema({
 })
 
 export const model = db.model('User', schema)
+
+export function sanitize_user(user: any) {
+    if (!user) return null
+
+    return {
+        id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        level: user.level,
+    }
+}
