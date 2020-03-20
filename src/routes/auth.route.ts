@@ -2,6 +2,8 @@ import { Router } from 'express'
 const router = Router()
 export default router
 
+import crypto from 'crypto'
+
 import validator from 'validator'
 import XRegExp from 'xregexp'
 
@@ -51,6 +53,56 @@ router.post('/auth/register', async (req, res) => {
         res.status(500).json({
             success: false,
             error: "Failed to register."
+        })
+    }
+})
+
+router.post('/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body || {}
+
+        const errors: string[] = []
+
+        if (typeof email !== 'string' || !validator.isEmail(email))
+            errors.push("Invalid email address.")
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                errors,
+            })
+        }
+
+        const invalid_credentials = () => res.status(400).json({
+            success: false,
+            error: "Invalid credentials."
+        })
+
+        if (typeof password !== 'string')
+            return invalid_credentials()
+
+        const user = await models.user.model.findOne({ email }).lean()
+
+        if (!user)
+            return invalid_credentials()
+
+        const valid = security.compare_hash(user.password, password)
+        if (!valid)
+            return invalid_credentials()
+
+        const token = await models.token.model.create({
+            token: crypto.randomBytes(16).toString('hex'),
+            user: user._id,
+        })
+
+        res.json({
+            success: true,
+            token: token.token,
+        })
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            error: "Failed to login."
         })
     }
 })
