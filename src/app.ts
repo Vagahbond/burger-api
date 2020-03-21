@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
-import body_parser from 'body-parser'
 
 import * as db from './db'
 
@@ -15,8 +14,8 @@ const app = express()
 
 app.use(helmet())
 
-app.use(body_parser.urlencoded({ extended: false }))
-app.use(body_parser.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 
 app.use(...Object.values(middlewares))
 app.use(...Object.values(routes))
