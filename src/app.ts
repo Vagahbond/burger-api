@@ -8,7 +8,7 @@ import * as middlewares from './middlewares'
 import * as routes from './routes'
 
 dotenv.config()
-db.connect()
+export const db_connection = db.connect()
 
 const app = express()
 
@@ -20,4 +20,8 @@ app.use(express.json())
 app.use(...Object.values(middlewares))
 app.use(...Object.values(routes))
 
-app.listen(process.env.PORT, () => console.log(`Listening on http://localhost:${process.env.PORT}/`))
+if (!process.env.TEST_RUN) {
+    app.listen(process.env.PORT, () => console.log(`Listening on http://localhost:${process.env.PORT}/`))
+}
+
+export default app
