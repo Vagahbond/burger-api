@@ -1,18 +1,19 @@
 import { Router } from 'express'
 
-import * as product from '../models/product.model'
+import * as models from '../models'
 
 const router = Router()
 export default router
 
 router.get('/products', async (req, res) => {
     try {
-        const products = await product.model.find()
+        const products = await models.product.model.find()
         res.json({
             success: true,
-            products,
+            products: products.map(p => models.product.sanitize_product(p)),
         })
     } catch (err) {
+        console.log(err)
         res.status(500).json({
             success: false,
             error: 'Unable to get all products',
@@ -22,7 +23,7 @@ router.get('/products', async (req, res) => {
 
 router.get('/product/:id', async (req, res) => {
     try {
-        const searched_product = await product.model.findOne({ id: req.params.id })
+        const searched_product = await models.product.model.findOne({ _id: req.params.id })
         if (searched_product === null) {
             res.status(404).json({
                 success: false,
@@ -31,7 +32,7 @@ router.get('/product/:id', async (req, res) => {
         } else {
             res.json({
                 success: true,
-                product: searched_product,
+                product: models.product.sanitize_product(searched_product),
             })
         }
     } catch (err) {
@@ -44,7 +45,7 @@ router.get('/product/:id', async (req, res) => {
 
 router.post('/product', async (req, res) => {
     try {
-        const new_product = new product.model({
+        const new_product = new models.product.model({
             name: req.body.name,
             count: req.body.count,
             price: req.body.price,
@@ -55,12 +56,7 @@ router.post('/product', async (req, res) => {
 
         res.json({
             success: true,
-            product: {
-                name: data.name,
-                count: data.count,
-                price: data.price,
-                promotion: data.promotion,
-            },
+            product: models.product.sanitize_product(data),
         })
     } catch (err) {
         res.status(400).json({
