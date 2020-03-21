@@ -88,7 +88,7 @@ router.post('/auth/login', guard({ auth: false }), async (req, res) => {
         if (!user)
             return invalid_credentials()
 
-        const valid = security.compare_hash(user.password, password)
+        const valid = await security.compare_hash(user.password, password)
         if (!valid)
             return invalid_credentials()
 

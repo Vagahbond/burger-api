@@ -9,7 +9,8 @@
         "jsx": "react"
     },
     "include": [
-        "src"
+        "src",
+        "test"
     ],
     "files": [
         "src/custom.d.ts"
