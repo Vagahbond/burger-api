@@ -3,31 +3,52 @@ const router = Router()
 export default router
 
 import * as models from '../models'
-import { json } from 'body-parser'
+import * as security from '../utils/security.utils'
+import * as validator from 'validator'
 
 const levels = {
     'admin': models.user.UserLevel.Admin,
     'preparator': models.user.UserLevel.Preparator,
     'customer': models.user.UserLevel.Customer,
-  }
+  } as const
 
-// router.post('/user', async (req,res) => {
-//     try {
-//         let first_name = req.body.first_name;
-//         let last_name = req.body.last_name;
-//         let email = req.body.email;
-//         let password = req.body.email;
+router.post('/user', async (req,res) => {
+    try {
+        let first_name = req.body.first_name;
+        let last_name = req.body.last_name;
+        let email = req.body.email;
+        let password = security.hash(req.body.email);
+        let level = levels[req.body.toLowerCase()];
+    
+        if (!first_name 
+            || !last_name 
+            || !validator.default.isEmail(email) 
+            || !password 
+            || !level ) {
+            res.status(400).json({
+                success: false,
+                err: "Input user is not valid."
+            })
+        }
 
-//         const user = new models.user.model.create(id, req.body.name, req.body.date, req.body.price);
-//     } catch (err) {
-//         console.log(err)
-//         res.status(500).json({
-//             success: false,
-//             error: "Could not add user.",
+        const user = await models.user.model.create({firstname: first_name, 
+            lastname: last_name, 
+            email: email, 
+            password: password, 
+            level: level });
+        res.status(201).json({
+            success: true,
+            user: models.user.sanitize_user(user),
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            success: false,
+            error: "Could not add user.",
             
-//         })
-//     }
-// })
+        })
+    }
+})
 
 router.get('/users', async (req, res) => {
     try {
@@ -124,10 +145,34 @@ router.get('user/who_ordered/:id', async (req, res) => {
         if (user === undefined) {
             res.status(404).json({ 
                 success: false,
-                error : `User who dade the order with ID ${id} does not exist.`,
+                error : `User who did the order with ID ${id} does not exist.`,
             })
         }
         res.json({
+            success: true,
+            user: models.user.sanitize_user(user),
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ 
+            success: false,
+            error : "Could not query user.",
+        })
+    }
+})
+
+router.delete('user/:id', async (req, res) => {
+    try {
+        let id = req.params.id
+        let user = await models.user.model.findOneAndDelete({_id: id})
+        
+        if (user === undefined) {
+            res.status(404).json({ 
+                success: false,
+                error : `User who dade the order with ID ${id} does not exist.`,
+            })
+        }
+        res.status(410).json({
             success: true,
             user: models.user.sanitize_user(user),
         })
