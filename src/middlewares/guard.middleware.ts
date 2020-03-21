@@ -10,7 +10,7 @@ interface GuardOptions {
 export default (options: GuardOptions) => {
     return (req: Request, res: Response, next: NextFunction) => {
         if (options.auth === undefined) {
-            if (!req.user?.level || !options.allow?.includes(req.user.level)) {
+            if ((typeof req.user?.level !== 'number') || !options.allow?.includes(req.user.level)) {
                 return res.status(401).json({
                     success: false,
                     error: 'Unauthorized.',
