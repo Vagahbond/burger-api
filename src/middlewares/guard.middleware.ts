@@ -17,7 +17,7 @@ export default (options: GuardOptions) => {
                 })
             }
         } else if (options.auth === false && req.user) {
-            return res.status(404).json({
+            return res.status(403).json({
                 success: false,
                 error: 'Forbidden.',
             })
