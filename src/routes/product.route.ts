@@ -41,3 +41,31 @@ router.get('/product/:id', async (req, res) => {
         })
     }
 })
+
+router.post('/product', async (req, res) => {
+    try {
+        const new_product = new product.model({
+            name: req.body.name,
+            count: req.body.count,
+            price: req.body.price,
+            promotion: req.body.promotion,
+        })
+
+        const data = await new_product.save()
+
+        res.json({
+            success: true,
+            product: {
+                name: data.name,
+                count: data.count,
+                price: data.price,
+                promotion: data.promotion,
+            },
+        })
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: 'Unable to create product',
+        })
+    }
+})
