@@ -5,6 +5,31 @@ import * as models from '../models'
 const router = Router()
 export default router
 
+const Joi = require('@hapi/joi');
+
+const schema = Joi.object({
+    name: Joi.string()
+        .alphanum()
+        .min(1)
+        .required(),
+
+    count: Joi.number()
+        .integer()
+        .min(0)
+        .required(),
+
+    price: Joi.number()
+        .integer()
+        .min(0)
+        .required(),
+
+    promotion: Joi.number()
+        .integer()
+        .min(0)
+        .max(100)
+        .required(),
+})
+
 router.get('/products', async (req, res) => {
     try {
         const products = await models.product.model.find()
@@ -45,18 +70,15 @@ router.get('/product/:id', async (req, res) => {
 
 router.post('/product', async (req, res) => {
     try {
-        const new_product = new models.product.model({
-            name: req.body.name,
-            count: req.body.count,
-            price: req.body.price,
-            promotion: req.body.promotion,
-        })
+        const received_product = await schema.validateAsync(req.body)
 
-        const data = await new_product.save()
+        const validated_product = new models.product.model(received_product)
+
+        const saved_product = await validated_product.save()
 
         res.json({
             success: true,
-            product: models.product.sanitize_product(data),
+            product: models.product.sanitize_product(saved_product),
         })
     } catch (err) {
         res.status(400).json({
