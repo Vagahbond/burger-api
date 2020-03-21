@@ -7,3 +7,4 @@ router.get('/auth/register', (req, res) => {
         success: true,
     })
 })
+
