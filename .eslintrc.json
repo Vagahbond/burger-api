@@ -21,6 +21,7 @@
     "rules": {
         "indent": [2, 4],
         "camelcase": "off",
-        "semi": "off"
+        "semi": "off",
+        "no-console": "off"
     }
 }
