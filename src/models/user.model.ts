@@ -8,11 +8,11 @@ export enum UserLevel {
 
 export interface IUser {
     _id: db.Schema.Types.ObjectId
-    firstname: string;
-    lastname: string;
-    email: string;
-    password: string;
-    level: UserLevel;
+    firstname: string
+    lastname: string
+    email: string
+    password: string
+    level: UserLevel
 }
 
 export const schema = new db.Schema({
