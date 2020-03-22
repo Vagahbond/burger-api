@@ -7,6 +7,7 @@ export enum UserLevel {
 }
 
 export interface IUser {
+    _id: db.Schema.Types.ObjectId
     firstname: string;
     lastname: string;
     email: string;

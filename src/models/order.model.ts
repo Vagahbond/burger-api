@@ -11,6 +11,7 @@ enum OrderStatus {
 }
 
 export interface IOrder {
+    _id: db.Schema.Types.ObjectId
     status: OrderStatus
     customer: db.Schema.Types.ObjectId | IUser
     products: (db.Schema.Types.ObjectId | IProduct)[]

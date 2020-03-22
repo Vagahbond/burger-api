@@ -1,6 +1,7 @@
 import db from '../db'
 
 export interface IConfig {
+    _id: db.Schema.Types.ObjectId
     name: string
     value: string
 }

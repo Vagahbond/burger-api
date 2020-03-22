@@ -3,6 +3,7 @@ import db from '../db'
 import { IProduct } from './product.model'
 
 export interface IMenu {
+    _id: db.Schema.Types.ObjectId
     name: string,
     products: (db.Schema.Types.ObjectId | IProduct)[]
     price: number

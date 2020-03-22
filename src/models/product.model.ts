@@ -1,6 +1,7 @@
 import db from '../db'
 
 export interface IProduct {
+    _id: db.Schema.Types.ObjectId
     name: string
     count: number
     price: number
