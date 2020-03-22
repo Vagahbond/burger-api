@@ -29,7 +29,6 @@ interface IUserLevelPut {
     level: string
 }
 
-context 
 
 const user_level_put_schema = Joi.object<IUserLevelPut>().options({
     abortEarly: false,
