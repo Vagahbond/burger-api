@@ -1,11 +1,10 @@
 import { Router } from 'express'
-
-import * as models from '../models'
-
 const router = Router()
 export default router
 
-const Joi = require('@hapi/joi');
+import Joi from '@hapi/joi'
+
+import * as models from '../models'
 
 const schema = Joi.object({
     name: Joi.string()
