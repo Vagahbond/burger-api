@@ -1,9 +1,20 @@
 import db from '../db'
 
+import { IUser } from './user.model'
+import { IProduct } from './product.model'
+
 enum OrderStatus {
     InProgress,
     Done,
     Cancelled
+}
+
+interface IOrder {
+    status: OrderStatus
+    customer: db.Schema.Types.ObjectId | IUser
+    products: (db.Schema.Types.ObjectId | IProduct)[]
+    creation_date: Date
+    withdrawal_date: Date
 }
 
 export const schema = new db.Schema({
@@ -14,4 +25,4 @@ export const schema = new db.Schema({
     withdrawal_date: { type: Date, required: true, },
 })
 
-export const model = db.model('Order', schema)
+export const model = db.model<IOrder & db.Document>('Order', schema)
