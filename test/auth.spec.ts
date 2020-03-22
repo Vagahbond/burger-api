@@ -1,10 +1,10 @@
 import supertest from 'supertest'
 
-import app, { db_connection } from '../src/app'
+import app, { loading } from '../src/app'
 import db from '../src/db'
 
 before(async () => {
-    await db_connection
+    await loading
 })
 
 after(async () => {
