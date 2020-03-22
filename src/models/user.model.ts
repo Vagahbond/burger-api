@@ -6,7 +6,7 @@ export enum UserLevel {
     Admin,
 }
 
-export interface IUser extends db.Document {
+export interface IUser {
     firstname: string;
     lastname: string;
     email: string;
@@ -22,7 +22,7 @@ export const schema = new db.Schema({
     level: { type: UserLevel, required: true, default: UserLevel.Customer, },
 })
 
-export const model = db.model<IUser>('User', schema)
+export const model = db.model<IUser & db.Document>('User', schema)
 
 export function sanitize_user(user: any) {
     if (!user) return null
