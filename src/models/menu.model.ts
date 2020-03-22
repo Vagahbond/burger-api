@@ -2,7 +2,7 @@ import db from '../db'
 
 import { IProduct } from './product.model'
 
-interface IMenu {
+export interface IMenu {
     name: string,
     products: (db.Schema.Types.ObjectId | IProduct)[]
     price: number
