@@ -3,11 +3,9 @@ const router = Router()
 export default router
 
 import * as models from '../models'
-import * as security from '../utils/security.utils'
-import validator from 'validator'
+import Joi from '@hapi/joi'
 import guard from '../middlewares/guard.middleware'
 
-import XRegExp from 'xregexp'
 
 import { UserLevel } from '../models/user.model'
 
@@ -18,6 +16,54 @@ const levels: {[key:string]: models.user.UserLevel} = {
     'customer': models.user.UserLevel.Customer,
   } 
 
+
+//interface defining user fields 
+interface IUserSelfPut {
+    firstname?: string
+    lastname?: string
+    password?: string
+}
+
+//interface defining user fields 
+interface IUserLevelPut {
+    level: string
+}
+
+context 
+
+const user_level_put_schema = Joi.object<IUserLevelPut>().options({
+    abortEarly: false,
+    stripUnknown: true, 
+}).keys({
+    level: Joi.string().valid('admin', 'user', 'preparator').required().messages({
+        'string.base' : `'level' should be a string`,
+        'string.empty' : `'level' cannot be empty`,
+        'any.valid' : `'level' can only be either 'admin', 'user', or 'preparator`,
+        'any.required' : `'level' is a required field.`,
+
+    })
+})
+
+const user_attrs_put_schema = Joi.object<IUserSelfPut>().options({
+    abortEarly: false,
+    stripUnknown: true,
+}).keys({
+    firstname: Joi.string().pattern(/^[\p{L}\- ]{2,}$/u).messages({
+        'string.base': `'firstname' should be a string`,
+        'string.empty': `'firstname' cannot be empty`,
+        'string.pattern': `'firstname' is invalid`,
+    }),
+    lastname: Joi.string().pattern(/^[\p{L}\- ]{2,}$/u).messages({
+        'string.base': `'lastname' should be a string`,
+        'string.empty': `'lastname' cannot be empty`,
+        'string.pattern': `'lastname' is invalid`,
+    }),
+    password: Joi.string().min(5).messages({
+        'string.base': `'password' should be a string`,
+        'string.empty': `'password' cannot be empty`,
+        'string.min': `'password' should have a minimum length of {#limit}`,
+    }),
+})
 // router.post('/user', async (req,res) => {
 //     try {
 //         const first_name = req.body.firstname
@@ -195,41 +241,14 @@ router.delete('user/:id', async (req, res) => {
     }
 })
 
+
 //a user can change neither his mail adress nor his rights levels
 router.put('/user', guard({ allow: [UserLevel.Admin, UserLevel.Customer, UserLevel.Preparator] }),  async (req,res) => {
     try {
-        const id: number | null = null
-        const firstname: string = ""
-        const lastname: string  = ""
-        const password: string  = ""
-        const user_attributes: { [key:string]: any }  = {}
-        const errors: string[] = []
+        const data : IUserSelfPut = await user_attrs_put_schema.validateAsync(req.body)
+        const id: number | null = req.user?._id;
 
-        if ((typeof firstname !== 'string' || !XRegExp('^[\\p{L}\- ]{2,}$').test(firstname.trim())) && firstname !== "")
-            errors.push("Invalid firstname.")
-        else 
-            user_attributes.firstname = firstname
-
-        if ((typeof lastname !== 'string' || !XRegExp('^[\\p{L}\- ]{2,}$').test(lastname.trim())) && lastname !== "")
-            errors.push("Invalid lastname.")
-            else 
-            user_attributes.lastname = lastname
-
-
-
-        if ((typeof password !== 'string' || password.length < 5) && password !== "")
-            errors.push("Invalid password (minimum 5 characters needed).")
-        else 
-            user_attributes.password = security.hash(password)
-
-        if (errors.length > 0) {
-            return res.status(400).json({
-                success: false,
-                errors,
-            })
-        }
-
-        const user = await models.user.model.findByIdAndUpdate(id, user_attributes);
+        const user = await models.user.model.findByIdAndUpdate(id, data);
         res.status(201).json({
             success: true,
             user: models.user.sanitize_user(user),
@@ -245,19 +264,12 @@ router.put('/user', guard({ allow: [UserLevel.Admin, UserLevel.Customer, UserLev
 })
 
 //an admin can change the rights level to someone 
-router.put('/user/:id', guard({ allow: [UserLevel.Admin] }),  async (req,res) => {
+router.put('/user/rights/:id', guard({ allow: [UserLevel.Admin] }),  async (req,res) => {
     try {
-        const id: string | null = req.params.id
-        const level_string: string = req.body.level
-        const level : UserLevel = levels[level_string]
-        if (level === undefined) {
-            return res.status(400).json({
-                success: false,
-                error: "The input level of right is not valid.",
-            })
-        }
+        const data: IUserLevelPut = await user_level_put_schema.validateAsync(req.body)
+        const id : number = parseInt(req.params.id);
 
-        const user = await models.user.model.findByIdAndUpdate(id, {level: level });
+        const user = await models.user.model.findByIdAndUpdate(id, data);
         res.status(201).json({
             success: true,
             user: models.user.sanitize_user(user),
