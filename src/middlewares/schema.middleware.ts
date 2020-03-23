@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 import Joi from '@hapi/joi'
 
-interface SchemasOptions {
+export interface SchemasOptions {
     body?: Joi.ObjectSchema<any>
     query?: Joi.ObjectSchema<any>
 }
+
+export class SchemaError extends Error { }
 
 const schema_options = {
     abortEarly: false,
@@ -32,7 +34,7 @@ export default (options: SchemasOptions) => async (req: Request, res: Response, 
 
         res.status(500).json({
             success: false,
-            error: "An error occured while validating the request."
+            error: (e instanceof SchemaError) ? e.message : 'An error occured while validating the request.',
         })
     }
 }
