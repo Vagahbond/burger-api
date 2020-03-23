@@ -7,6 +7,7 @@ import * as models from '../models'
 
 import Joi from '@hapi/joi'
 import guard from '../middlewares/guard.middleware'
+import schema from '../middlewares/schema.middleware'
 
 
 import { UserLevel } from '../models/user.model'
@@ -17,6 +18,7 @@ const levels: {[key:string]: models.user.UserLevel} = {
     'preparator': models.user.UserLevel.Preparator,
     'customer': models.user.UserLevel.Customer,
 } 
+
 
 
 //interface defining user fields 
@@ -38,10 +40,10 @@ const user_level_put_schema = Joi.object<IUserLevelPut>().options({
     stripUnknown: true, 
 })
 .keys({
-    level: Joi.string().valid('admin', 'user', 'preparator').required().messages({
+    level: Joi.string().valid('admin', 'customer', 'preparator').required().messages({
         'string.base' : `'level' should be a string`,
         'string.empty' : `'level' cannot be empty`,
-        'any.valid' : `'level' can only be either 'admin', 'user', or 'preparator`,
+        'any.valid' : `'level' can only be either 'admin', 'user', or 'customer`,
         'any.required' : `'level' is a required field.`,
     })
 })
@@ -172,44 +174,12 @@ router.get('user/email/:email', async (req, res) => {
     }
 })
 
-// router.get('user/who_ordered/:id', async (req, res) => {
-//     try {
 
-//         const id = req.params.id
-//         const user = await models.order.model.findById(id).populate("customer")
-        
-//         if (user === undefined) {
-//             res.status(404).json({ 
-//                 success: false,
-//                 error : `User who did the order with ID ${id} does not exist.`,
-//             })
-//         }
-
-//         res.json({
-//             success: true,
-//             user: models.user.sanitize_user(user),
-//         })
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).json({ 
-//             success: false,
-//             error : "Could not query user.",
-//         })
-//     }
-// })
-
-router.delete('user/:id', guard({ allow: [UserLevel.Admin] }), async (req, res) => {
+router.delete('user', guard({ auth: true }), async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.user?._id
         const user = await models.user.model.findByIdAndRemove(id)
         
-        if (user === undefined) {
-            res.status(404).json({ 
-                success: false,
-                error : `User who dade the order with ID ${id} does not exist.`,
-            })
-        }
-
         res.status(410).json({
             success: true,
             user: models.user.sanitize_user(user),
@@ -218,18 +188,16 @@ router.delete('user/:id', guard({ allow: [UserLevel.Admin] }), async (req, res) 
         console.log(err);
         res.status(500).json({ 
             success: false,
-            error : "Could not query user.",
+            error : "Could not delete user.",
         })
     }
 })
 
-
 //a user can change neither his mail adress nor his rights levels
-router.put('/user', guard({ allow: [UserLevel.Admin, UserLevel.Customer, UserLevel.Preparator] }),  async (req,res) => {
+router.put('/user', guard({auth: true}),  schema({body: user_attrs_put_schema}),  async (req,res) => {
     try {
-        const data : IUserSelfPut = await user_attrs_put_schema.validateAsync(req.body)
         const id = req.user?._id;
-        const user = await models.user.model.findByIdAndUpdate(id, data);
+        const user = await models.user.model.findByIdAndUpdate(id, req.body);
 
         res.status(201).json({
             success: true,
@@ -246,11 +214,10 @@ router.put('/user', guard({ allow: [UserLevel.Admin, UserLevel.Customer, UserLev
 })
 
 //an admin can change the rights level to someone 
-router.put('/user/rights/:id', guard({ allow: [UserLevel.Admin] }),  async (req,res) => {
+router.put('/user/rights/:id', guard({ allow: [UserLevel.Admin] }),  schema({body: user_level_put_schema}),  async (req,res) => {
     try {
-        const data: IUserLevelPut = await user_level_put_schema.validateAsync(req.body)
         const id = req.params.id;
-        const user = await models.user.model.findByIdAndUpdate(id, data);
+        const user = await models.user.model.findByIdAndUpdate(id, {level : levels[req.body.level]});
         
         res.status(201).json({
             success: true,
