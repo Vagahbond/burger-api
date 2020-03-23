@@ -170,14 +170,14 @@ router.get('user/:id', async (req, res) => {
     }
 })
 
-router.get('user/mail/:mail', async (req, res) => {
+router.get('user/email/:email', async (req, res) => {
     try {
-        const mail = req.params.mail
-        const user = await models.user.model.find({mail: mail});
+        const email = req.params.mail
+        const user = await models.user.model.find({mail: email});
         if (user === undefined) {
             res.status(404).json({ 
                 success: false,
-                error : `User with email ${mail} does not exist.`,
+                error : `User with email ${email} does not exist.`,
             })
         }
         res.json({
