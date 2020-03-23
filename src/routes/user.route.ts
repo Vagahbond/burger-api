@@ -123,10 +123,11 @@ router.get('/users', async (req, res) => {
 })
 
 router.get('/users/:level', async (req, res) => {
-    let level = req.params.level.toString();
+    const level : string = req.params.level.toLowerCase();
     try {
+        const level : string = req.params.level.toLowerCase();
         const user_level = levels[level.toLowerCase()]
-        if (user_level === undefined) {
+        if (level in levels) {
             res.status(400).json({ 
                 success: false,
                 error : "Provided authentification level is invalid.",
@@ -245,7 +246,7 @@ router.delete('user/:id', async (req, res) => {
 router.put('/user', guard({ allow: [UserLevel.Admin, UserLevel.Customer, UserLevel.Preparator] }),  async (req,res) => {
     try {
         const data : IUserSelfPut = await user_attrs_put_schema.validateAsync(req.body)
-        const id: number | null = req.user?._id;
+        const id: object | undefined = req.user?._id;
 
         const user = await models.user.model.findByIdAndUpdate(id, data);
         res.status(201).json({
