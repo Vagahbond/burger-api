@@ -1,10 +1,11 @@
 import { Router } from 'express'
-const router = Router()
-export default router
 
 import Joi from '@hapi/joi'
 
 import * as models from '../models'
+
+const router = Router()
+export default router
 
 const schema = Joi.object({
     name: Joi.string()
@@ -34,7 +35,7 @@ router.get('/products', async (req, res) => {
         const products = await models.product.model.find()
         res.json({
             success: true,
-            products: products.map(p => models.product.sanitize_product(p)),
+            products: products.map((p) => models.product.sanitize_product(p)),
         })
     } catch (err) {
         console.log(err)

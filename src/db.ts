@@ -11,7 +11,7 @@ export async function connect() {
     }
 
     if (!uri) {
-        throw new Error("Missing DB_URI environment variable.")
+        throw new Error('Missing DB_URI environment variable.')
     }
 
     return mongoose.connect(uri, {

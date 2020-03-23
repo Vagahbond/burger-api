@@ -9,7 +9,7 @@ export interface IToken {
 }
 
 export const schema = new db.Schema({
-    token: { type: String, required: true, },
+    token: { type: String, required: true },
     user: { type: db.Schema.Types.ObjectId, ref: 'User', required: true },
 })
 

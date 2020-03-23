@@ -1,6 +1,4 @@
 import { Router } from 'express'
-const router = Router()
-export default router
 
 import crypto from 'crypto'
 import Joi from '@hapi/joi'
@@ -9,6 +7,9 @@ import * as models from '../models'
 import * as security from '../utils/security.utils'
 
 import guard from '../middlewares/guard.middleware'
+
+const router = Router()
+export default router
 
 interface IAuthRegisterPost {
     firstname: string
@@ -22,28 +23,28 @@ const auth_register_post_schema = Joi.object<IAuthRegisterPost>().options({
     stripUnknown: true,
 }).keys({
     firstname: Joi.string().pattern(/^[\p{L}\- ]{2,}$/u).required().messages({
-        'string.base': `'firstname' should be a string`,
-        'string.empty': `'firstname' cannot be empty`,
-        'string.pattern': `'firstname' is invalid`,
-        'any.required': `'firstname' is a required field`
+        'string.base': '\'firstname\' should be a string',
+        'string.empty': '\'firstname\' cannot be empty',
+        'string.pattern': '\'firstname\' is invalid',
+        'any.required': '\'firstname\' is a required field',
     }),
     lastname: Joi.string().pattern(/^[\p{L}\- ]{2,}$/u).required().messages({
-        'string.base': `'lastname' should be a string`,
-        'string.empty': `'lastname' cannot be empty`,
-        'string.pattern': `'lastname' is invalid`,
-        'any.required': `'lastname' is a required field`
+        'string.base': '\'lastname\' should be a string',
+        'string.empty': '\'lastname\' cannot be empty',
+        'string.pattern': '\'lastname\' is invalid',
+        'any.required': '\'lastname\' is a required field',
     }),
     email: Joi.string().email().required().messages({
-        'string.base': `'email' should be a string`,
-        'string.empty': `'email' cannot be empty`,
-        'string.email': `'email' is an invalid email address`,
-        'any.required': `'email' is a required field`
+        'string.base': '\'email\' should be a string',
+        'string.empty': '\'email\' cannot be empty',
+        'string.email': '\'email\' is an invalid email address',
+        'any.required': '\'email\' is a required field',
     }),
     password: Joi.string().min(5).required().messages({
-        'string.base': `'password' should be a string`,
-        'string.empty': `'password' cannot be empty`,
-        'string.min': `'password' should have a minimum length of {#limit}`,
-        'any.required': `'password' is a required field`
+        'string.base': '\'password\' should be a string',
+        'string.empty': '\'password\' cannot be empty',
+        'string.min': '\'password\' should have a minimum length of {#limit}',
+        'any.required': '\'password\' is a required field',
     }),
 })
 
@@ -66,13 +67,13 @@ router.post('/auth/register', guard({ auth: false }), async (req, res) => {
         if ('details' in e) {
             return res.status(400).json({
                 success: false,
-                errors: (e as Joi.ValidationError).details.map(d => d.message),
+                errors: (e as Joi.ValidationError).details.map((d) => d.message),
             })
         }
 
         res.status(500).json({
             success: false,
-            error: "Failed to register."
+            error: 'Failed to register.',
         })
     }
 })
@@ -87,15 +88,15 @@ const auth_login_post_schema = Joi.object<IAuthLoginPost>().options({
     stripUnknown: true,
 }).keys({
     email: Joi.string().email().required().messages({
-        'string.base': `'email' should be a string`,
-        'string.empty': `'email' cannot be empty`,
-        'string.email': `'email' is an invalid email address`,
-        'any.required': `'email' is a required field`
+        'string.base': '\'email\' should be a string',
+        'string.empty': '\'email\' cannot be empty',
+        'string.email': '\'email\' is an invalid email address',
+        'any.required': '\'email\' is a required field',
     }),
     password: Joi.string().min(5).required().messages({
-        'string.base': `'password' should be a string`,
-        'string.empty': `'password' cannot be empty`,
-        'any.required': `'password' is a required field`
+        'string.base': '\'password\' should be a string',
+        'string.empty': '\'password\' cannot be empty',
+        'any.required': '\'password\' is a required field',
     }),
 })
 
@@ -105,17 +106,15 @@ router.post('/auth/login', guard({ auth: false }), async (req, res) => {
 
         const invalid_credentials = () => res.status(400).json({
             success: false,
-            error: "Invalid credentials."
+            error: 'Invalid credentials.',
         })
 
         const user = await models.user.model.findOne({ email: data.email }).lean()
 
-        if (!user)
-            return invalid_credentials()
+        if (!user) return invalid_credentials()
 
         const valid = await security.compare_hash(user.password, data.password)
-        if (!valid)
-            return invalid_credentials()
+        if (!valid) return invalid_credentials()
 
         const token = await models.token.model.create({
             token: crypto.randomBytes(16).toString('hex'),
@@ -130,13 +129,13 @@ router.post('/auth/login', guard({ auth: false }), async (req, res) => {
         if ('details' in e) {
             return res.status(400).json({
                 success: false,
-                errors: (e as Joi.ValidationError).details.map(d => d.message),
+                errors: (e as Joi.ValidationError).details.map((d) => d.message),
             })
         }
 
         res.status(500).json({
             success: false,
-            error: "Failed to login."
+            error: 'Failed to login.',
         })
     }
 })
