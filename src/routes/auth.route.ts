@@ -9,6 +9,7 @@ import * as models from '../models'
 import * as security from '../utils/security.utils'
 
 import guard from '../middlewares/guard.middleware'
+import schema from '../middlewares/schema.middleware'
 
 interface IAuthRegisterPost {
     firstname: string
@@ -17,10 +18,7 @@ interface IAuthRegisterPost {
     password: string
 }
 
-const auth_register_post_schema = Joi.object<IAuthRegisterPost>().options({
-    abortEarly: false,
-    stripUnknown: true,
-}).keys({
+const auth_register_post_schema = Joi.object<IAuthRegisterPost>().keys({
     firstname: Joi.string().pattern(/^[\p{L}\- ]{2,}$/u).required().messages({
         'string.base': `'firstname' should be a string`,
         'string.empty': `'firstname' cannot be empty`,
@@ -47,9 +45,9 @@ const auth_register_post_schema = Joi.object<IAuthRegisterPost>().options({
     }),
 })
 
-router.post('/auth/register', guard({ auth: false }), async (req, res) => {
+router.post('/auth/register', guard({ auth: false }), schema({ body: auth_register_post_schema }), async (req, res) => {
     try {
-        const data: IAuthRegisterPost = await auth_register_post_schema.validateAsync(req.body)
+        const data = req.body as IAuthRegisterPost
 
         const user = await models.user.model.create({
             firstname: data.firstname.trim().replace(/  +/g, ''),
@@ -63,13 +61,6 @@ router.post('/auth/register', guard({ auth: false }), async (req, res) => {
             user: models.user.sanitize_user(user),
         })
     } catch (e) {
-        if ('details' in e) {
-            return res.status(400).json({
-                success: false,
-                errors: (e as Joi.ValidationError).details.map(d => d.message),
-            })
-        }
-
         res.status(500).json({
             success: false,
             error: "Failed to register."
@@ -99,9 +90,9 @@ const auth_login_post_schema = Joi.object<IAuthLoginPost>().options({
     }),
 })
 
-router.post('/auth/login', guard({ auth: false }), async (req, res) => {
+router.post('/auth/login', guard({ auth: false }), schema({ body: auth_login_post_schema }), async (req, res) => {
     try {
-        const data: IAuthLoginPost = await auth_login_post_schema.validateAsync(req.body)
+        const data = req.body as IAuthLoginPost
 
         const invalid_credentials = () => res.status(400).json({
             success: false,
@@ -127,13 +118,6 @@ router.post('/auth/login', guard({ auth: false }), async (req, res) => {
             token: token.token,
         })
     } catch (e) {
-        if ('details' in e) {
-            return res.status(400).json({
-                success: false,
-                errors: (e as Joi.ValidationError).details.map(d => d.message),
-            })
-        }
-
         res.status(500).json({
             success: false,
             error: "Failed to login."
