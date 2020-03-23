@@ -172,33 +172,33 @@ router.get('user/email/:email', async (req, res) => {
     }
 })
 
-router.get('user/who_ordered/:id', async (req, res) => {
-    try {
+// router.get('user/who_ordered/:id', async (req, res) => {
+//     try {
 
-        const id = req.params.id
-        const user = await models.order.model.findById(id).populate("customer")
+//         const id = req.params.id
+//         const user = await models.order.model.findById(id).populate("customer")
         
-        if (user === undefined) {
-            res.status(404).json({ 
-                success: false,
-                error : `User who did the order with ID ${id} does not exist.`,
-            })
-        }
+//         if (user === undefined) {
+//             res.status(404).json({ 
+//                 success: false,
+//                 error : `User who did the order with ID ${id} does not exist.`,
+//             })
+//         }
 
-        res.json({
-            success: true,
-            user: models.user.sanitize_user(user),
-        })
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ 
-            success: false,
-            error : "Could not query user.",
-        })
-    }
-})
+//         res.json({
+//             success: true,
+//             user: models.user.sanitize_user(user),
+//         })
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({ 
+//             success: false,
+//             error : "Could not query user.",
+//         })
+//     }
+// })
 
-router.delete('user/:id', async (req, res) => {
+router.delete('user/:id', guard({ allow: [UserLevel.Admin] }), async (req, res) => {
     try {
         const id = req.params.id
         const user = await models.user.model.findByIdAndRemove(id)
@@ -228,7 +228,7 @@ router.delete('user/:id', async (req, res) => {
 router.put('/user', guard({ allow: [UserLevel.Admin, UserLevel.Customer, UserLevel.Preparator] }),  async (req,res) => {
     try {
         const data : IUserSelfPut = await user_attrs_put_schema.validateAsync(req.body)
-        const id: object | undefined = req.user?._id;
+        const id = req.user?._id;
         const user = await models.user.model.findByIdAndUpdate(id, data);
 
         res.status(201).json({
@@ -249,7 +249,7 @@ router.put('/user', guard({ allow: [UserLevel.Admin, UserLevel.Customer, UserLev
 router.put('/user/rights/:id', guard({ allow: [UserLevel.Admin] }),  async (req,res) => {
     try {
         const data: IUserLevelPut = await user_level_put_schema.validateAsync(req.body)
-        const id : number = parseInt(req.params.id);
+        const id = req.params.id;
         const user = await models.user.model.findByIdAndUpdate(id, data);
         
         res.status(201).json({
