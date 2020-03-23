@@ -9,7 +9,7 @@ import * as models from '../models'
 import * as security from '../utils/security.utils'
 
 import guard from '../middlewares/guard.middleware'
-import schema from '../middlewares/schema.middleware'
+import schema, { SchemaError } from '../middlewares/schema.middleware'
 
 interface IAuthRegisterPost {
     firstname: string
@@ -31,7 +31,11 @@ const auth_register_post_schema = Joi.object<IAuthRegisterPost>().keys({
         'string.pattern': `'lastname' is invalid`,
         'any.required': `'lastname' is a required field`
     }),
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email().required().external(async (email: string) => {
+        if (await models.user.model.exists({ email })) {
+            throw new SchemaError('This email is already used.')
+        }
+    }).messages({
         'string.base': `'email' should be a string`,
         'string.empty': `'email' cannot be empty`,
         'string.email': `'email' is an invalid email address`,
