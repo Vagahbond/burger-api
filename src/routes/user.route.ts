@@ -122,7 +122,7 @@ router.get('/users/:level', async (req, res) => {
     }
 }) 
 
-router.get('user/:id', async (req, res) => {
+router.get('/user/:id', async (req, res) => {
     try {
 
         const id = req.params.id
@@ -148,7 +148,7 @@ router.get('user/:id', async (req, res) => {
     }
 })
 
-router.get('user/email/:email', async (req, res) => {
+router.get('/user/email/:email', async (req, res) => {
     try {
 
         const email = req.params.mail
@@ -175,7 +175,7 @@ router.get('user/email/:email', async (req, res) => {
 })
 
 
-router.delete('user', guard({ auth: true }), async (req, res) => {
+router.delete('/user', guard({ auth: true }), async (req, res) => {
     try {
         const id = req.user?._id
         const user = await models.user.model.findByIdAndRemove(id)
