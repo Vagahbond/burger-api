@@ -86,3 +86,35 @@ router.post('/product', async (req, res) => {
         })
     }
 })
+
+router.patch('/product/:id', async (req, res) => {
+    try {
+        const searched_product = await models.product.model.findOne({ _id: req.params.id })
+        if (searched_product === null) {
+            res.status(404).json({
+                success: false,
+                error: 'Product was not found.',
+            })
+        } else {
+            const received_product = await schema.validateAsync(req.body)
+
+            // Merge current product with updated properties
+            const modified_product = { ...searched_product, ...received_product }
+
+            // Make sure the product is still valid
+            const validated_product = new models.product.model(modified_product)
+
+            const saved_product = await validated_product.save()
+
+            res.json({
+                success: true,
+                product: models.product.sanitize_product(saved_product),
+            })
+        }
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: 'Unable to update product',
+        })
+    }
+})
