@@ -1,8 +1,8 @@
 import db from '../db'
 
 import { IUser } from './user.model'
-import { IProduct } from './product.model'
-import { IMenu } from './menu.model'
+import { model as ProductModel, IProduct } from './product.model'
+import { model as MenuModel, IMenu } from './menu.model'
 
 enum OrderStatus {
     InProgress,
@@ -14,8 +14,8 @@ export interface IOrder {
     _id: db.Schema.Types.ObjectId
     status: OrderStatus
     customer: db.Schema.Types.ObjectId | IUser
-    products: (db.Schema.Types.ObjectId | IProduct)[]
-    menus: (db.Schema.Types.ObjectId | IMenu)[]
+    products: IProduct[]
+    menus: IMenu[]
     creation_date: Date
     withdrawal_date: Date
 }
@@ -23,8 +23,8 @@ export interface IOrder {
 export const schema = new db.Schema({
     status: { type: OrderStatus, required: true, default: OrderStatus.InProgress, },
     customer: { type: db.Schema.Types.ObjectId, ref: 'User', required: true },
-    products: [{ type: db.Schema.Types.ObjectId, ref: 'Product', required: true }],
-    menus: [{ type: db.Schema.Types.ObjectId, ref: 'Menu', required: true }],
+    products: [{ ProductModel, ref: 'Product', required: true }],
+    menus: [{ MenuModel, ref: 'Menu', required: true }],
     creation_date: { type: Date, required: true, default: Date.now() },
     withdrawal_date: { type: Date, required: true, },
 })
