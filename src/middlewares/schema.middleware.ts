@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import Joi from '@hapi/joi'
 
 export interface SchemasOptions {
+    params?: Joi.ObjectSchema<any>
     body?: Joi.ObjectSchema<any>
     query?: Joi.ObjectSchema<any>
 }
@@ -15,6 +16,10 @@ const schema_options = {
 
 export default (options: SchemasOptions) => async (req: Request, res: Response, next: NextFunction) => {
     try {
+        if (options.params) {
+            req.params = await options.params.options(schema_options).validateAsync(req.params)
+        }
+
         if (options.body) {
             req.body = await options.body.options(schema_options).validateAsync(req.body)
         }
