@@ -13,6 +13,7 @@ export const schema = new db.Schema({
     count: { type: Number, required: true, },
     price: { type: Number, required: true, },
     promotion: { type: Number, required: true, },
+    featured: { type: Boolean, required: true, default: false },
 })
 
 export const model = db.model<IProduct & db.Document>('Product', schema)
@@ -26,5 +27,6 @@ export function sanitize_product(product: any) {
         count: product.count,
         price: product.price,
         promotion: product.promotion,
+        featured: product.featured,
     }
 }

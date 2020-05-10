@@ -118,3 +118,19 @@ router.patch('/product/:id', async (req, res) => {
         })
     }
 })
+
+router.get('/products/featured', async (req, res) => {
+    try {
+        const products = await models.product.model.find({ featured: true })
+        res.json({
+            success: true,
+            products: products.map(p => models.product.sanitize_product(p)),
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            success: false,
+            error: 'Unable to get all products',
+        })
+    }
+})
