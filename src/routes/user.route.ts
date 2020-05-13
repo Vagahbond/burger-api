@@ -216,7 +216,7 @@ router.put('/user', guard({auth: true}),  schema({body: user_attrs_put_schema}),
 //an admin can change the rights level to someone 
 router.put('/user/rights/:id', guard({ allow: [UserLevel.Admin] }),  schema({body: user_level_put_schema}),  async (req,res) => {
     try {
-        const id = req.params.id;
+        const id = req.params.id
         const user = await models.user.model.findByIdAndUpdate(id, {level : levels[req.body.level]});
         
         res.status(201).json({
