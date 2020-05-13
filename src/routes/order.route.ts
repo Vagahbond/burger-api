@@ -69,6 +69,39 @@ router.get(
         }
     })
 
+
+router.post('/orders/:id/cancel',
+    schema({
+        params: Joi.object({
+            id: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+        }),
+    }),
+    guard({
+        allow: [UserLevel.Admin, UserLevel.Preparator],
+    }),
+    async (req, res) => {
+        try {
+            const order = await models.order.model.updateOne({
+                _id: req.params.id,
+            }, {
+                status: OrderStatus.Cancelled,
+            })
+
+            res.json({
+                success: true,
+                order,
+            })
+        }
+        catch (err) {
+            console.error(err)
+
+            res.status(500).json({
+                succes: false,
+                error: 'Error while fetching the order.'
+            })
+        }
+    })
+
 router.post(
     '/orders',
     schema({
