@@ -6,6 +6,7 @@ export interface IProduct {
     count: number
     price: number
     promotion: number
+    featured?: boolean
 }
 
 export const schema = new db.Schema({

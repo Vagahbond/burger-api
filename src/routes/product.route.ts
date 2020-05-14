@@ -7,6 +7,8 @@ import Joi from '@hapi/joi'
 import * as models from '../models'
 import schema from '../middlewares/schema.middleware'
 import { IProduct } from '../models/product.model'
+import guard from '../middlewares/guard.middleware'
+import { UserLevel } from '../models/user.model'
 
 router.get('/products', async (req, res) => {
     try {
@@ -66,29 +68,34 @@ const create_product_schema = Joi.object({
     promotion: Joi.number()
         .integer()
         .min(0)
-        .max(100)
+        .max(1)
         .required(),
 })
 
-router.post('/product', async (req, res) => {
-    try {
-        const received_product = await create_product_schema.validateAsync(req.body)
+router.post(
+    '/product',
+    guard({
+        allow: [UserLevel.Admin],
+    }),
+    async (req, res) => {
+        try {
+            const received_product = await create_product_schema.validateAsync(req.body)
 
-        const validated_product = new models.product.model(received_product)
+            const validated_product = new models.product.model(received_product)
 
-        const saved_product = await validated_product.save()
+            const saved_product = await validated_product.save()
 
-        res.json({
-            success: true,
-            product: models.product.sanitize_product(saved_product),
-        })
-    } catch (err) {
-        res.status(400).json({
-            success: false,
-            error: 'Unable to create product',
-        })
-    }
-})
+            res.json({
+                success: true,
+                product: models.product.sanitize_product(saved_product),
+            })
+        } catch (err) {
+            res.status(400).json({
+                success: false,
+                error: 'Unable to create product',
+            })
+        }
+    })
 
 const product_put_schema = Joi.object({
     name: Joi.string()
@@ -106,10 +113,16 @@ const product_put_schema = Joi.object({
     promotion: Joi.number()
         .integer()
         .min(0)
-        .max(100),
+        .max(1),
+
+    featured: Joi.bool(),
 })
 
-router.put('/product/:id',
+router.put(
+    '/product/:id',
+    guard({
+        allow: [UserLevel.Admin],
+    }),
     schema({
         body: product_put_schema,
         params: Joi.object({
@@ -148,19 +161,3 @@ router.put('/product/:id',
             })
         }
     })
-
-router.get('/products/featured', async (req, res) => {
-    try {
-        const products = await models.product.model.find({ featured: true })
-        res.json({
-            success: true,
-            products: products.map(p => models.product.sanitize_product(p)),
-        })
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({
-            success: false,
-            error: 'Unable to get all products',
-        })
-    }
-})
