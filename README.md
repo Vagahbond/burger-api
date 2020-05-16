@@ -12,6 +12,31 @@
     - [User](#user-1)
 
 # Endpoints
+
+## Setup
+
+### POST /setup
+
+Setup Admin user.
+
+#### Body data structure
+```ts
+firstname: string
+lastname: string
+email: string
+password: string
+```
+
+#### Errors
+* 500 - Failed to setup.
+
+#### Response data structure
+```ts
+success: boolean
+user?: User
+errors?: string[]
+```
+
 ## Auth
 ### POST /auth/register
 Register a new account.
