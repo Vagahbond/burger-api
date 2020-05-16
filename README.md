@@ -135,6 +135,23 @@ order?: Order
 
 ## Featured
 
+### GET /featured
+
+Fetch all featured products and menus.
+
+#### Errors
+
+* 500 - Error while fetching products and menus.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+products: Product[]
+menus: Menu[]
+```
+
 # Data structures
 ## User
 ```ts
