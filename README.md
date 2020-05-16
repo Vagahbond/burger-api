@@ -30,8 +30,28 @@ password: string
 #### Response data structure
 ```ts
 success: boolean
-errors?: string
+error?: string
 user?: User
+```
+
+### POST /auth/login
+Login to an account.
+
+#### Body data structure
+```ts
+email: string
+password: string
+```
+
+#### Errors
+* 400 - Invalid credentials.
+* 500 - Failed to login.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+token?: string
 ```
 
 ## User
