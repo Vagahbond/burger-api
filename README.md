@@ -58,6 +58,78 @@ token?: string
 
 ## Products
 
+### GET /products
+Fetch all products.
+
+#### Errors
+* 500 - Error while fetching products.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+products?: Product[]
+```
+
+### GET /products/:id
+Fetch an product with a specific ID.
+
+#### Errors
+* 500 - Error while fetching the product.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+product?: Product
+```
+
+### POST /products
+Create a product.
+
+#### Body data structure
+```ts
+name: string
+count: integer
+price: number
+promotion: integer
+```
+
+#### Errors
+
+* 500 - Error while creating the product.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+product?: Product
+```
+
+### PUT /products
+Update a product.
+
+#### Body data structure
+
+```ts
+name?: string
+count?: integer
+price?: number
+promotion?: integer
+featured?: boolean
+```
+
+#### Errors
+
+* 500 - Error while creating the product.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+product?: Product
+```
+
 ## Menus
 
 ## Orders
