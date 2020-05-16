@@ -1,8 +1,8 @@
 # Burger API
 
 - [Endpoints](#endpoints)
+    - [Setup](#setup)
     - [Auth](#auth)
-        - [POST /auth/register](#post-authregister)
     - [User](#user)
     - [Products](#products)
     - [Menus](#menus)
@@ -10,6 +10,9 @@
     - [Featured](#featured)
 - [Data structures](#data-structures)
     - [User](#user-1)
+    - [Product](#product)
+    - [Menu](#menu)
+    - [Order](#order)
 
 # Endpoints
 
