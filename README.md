@@ -61,6 +61,77 @@ token?: string
 ## Menus
 
 ## Orders
+### GET /orders
+Fetch all orders.
+
+#### Errors
+* 500 - Error while fetching orders.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+orders?: Order[]
+```
+
+### GET /orders/:id
+Fetch an order with a specific ID.
+
+#### Errors
+* 500 - Error while fetching the order.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+order?: Order
+```
+
+### POST /orders/:id/cancel
+Cancel a specific order.
+
+#### Errors
+* 500 - Error while updating the order.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+```
+
+### POST /orders/:id/done
+Validate the completion of a specific order.
+
+#### Errors
+* 500 - Error while updating the order.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+```
+
+### POST /orders
+Create an order.
+
+#### Body data structure
+```ts
+products: string[]
+menus: string[]
+```
+
+#### Errors
+* 400 - Product with id 'xxxxxxxxxxxxxxxxxxxxxxxx' doesn't exists.
+* 400 - There is no more products with id 'xxxxxxxxxxxxxxxxxxxxxxxx' available.
+* 400 - Menu with id 'xxxxxxxxxxxxxxxxxxxxxxxx' doesn't exists.
+* 500 - Error while creating the order.
+
+#### Response data structure
+```ts
+success: boolean
+error?: string
+order?: Order
+```
 
 ## Featured
 
@@ -72,4 +143,35 @@ firstname: string
 lastname: string
 email: string
 level: number
+```
+
+## Product
+```ts
+_id: string
+name: string
+count: number
+price: number
+promotion: number
+featured: boolean
+```
+
+## Menu
+```ts
+_id: string
+name: string,
+products: (string | Product)[]
+price: number
+promotion: number
+featured: boolean
+```
+
+## Order
+```ts
+_id: string
+status: number
+customer?: string
+products: Product[]
+menus: Menu[]
+creation_date?: Date
+withdrawal_date?: Date
 ```
