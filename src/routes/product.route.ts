@@ -61,7 +61,6 @@ const create_product_schema = Joi.object({
         .required(),
 
     price: Joi.number()
-        .integer()
         .min(0)
         .required(),
 
@@ -107,7 +106,6 @@ const product_put_schema = Joi.object({
         .min(0),
 
     price: Joi.number()
-        .integer()
         .min(0),
 
     promotion: Joi.number()
