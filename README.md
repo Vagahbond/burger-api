@@ -183,6 +183,72 @@ product?: Product
 
 ## Menus
 
+### GET /menus
+
+Fetch all menus.
+
+#### Errors
+
+- 500 - Could not query menus.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+menus?: Menu[]
+```
+
+### GET /menu/:id
+
+Fetch a menu with a specific ID.
+
+#### Errors
+
+- 500 - Could not query menu.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+menu?: Menu
+```
+
+### POST /menus
+
+Create a menu.
+
+#### Errors
+
+- 400 - Product XXXXXXXXXX does not exist.
+- 500 - Failed to create menu.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+menu?: menu
+```
+
+### PUT /menus/:id
+
+update a menu's properties.
+
+#### Errors
+
+- 304 - Menu XXXXXXXXXX does not exist.
+- 500 - Error while updating the order.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+menu?: Menu
+```
+
 ## Orders
 
 ### GET /orders

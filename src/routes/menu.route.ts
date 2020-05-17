@@ -175,9 +175,16 @@ router.put(
     }),
     async (req, res) => {
         try {
-            const update = req.body as IMenuSelfPut
             const id = req.params.id
-
+            const exists = await models.menu.model.exists({ _id: id })
+            if (!exists){
+                res.status(304).json({
+                    succes: false,
+                    error: `Menu ${id} des not exist.`
+                })
+            }
+            const update = req.body as IMenuSelfPut
+            
             const menu = await models.menu.model.findByIdAndUpdate(id, update)
 
             res.status(201).json({
