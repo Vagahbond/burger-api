@@ -1,5 +1,6 @@
 # Burger API
 
+- [How to setup](#how-to-setup)
 - [Endpoints](#endpoints)
   - [Setup](#setup)
   - [Auth](#auth)
@@ -13,6 +14,13 @@
   - [Product](#product)
   - [Menu](#menu)
   - [Order](#order)
+
+# How to setup
+
+- Clone this repository: `git clone https://github.com/Vagahbond/burger-api.git`
+- Install NPM dependencies: `npm i`
+- Make a [POST request at `/setup`](#post-setup) to define the admin user
+- You're done!
 
 # Endpoints
 
