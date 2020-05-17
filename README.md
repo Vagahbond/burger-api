@@ -96,6 +96,127 @@ token?: string
 
 ## User
 
+### GET /users
+
+Fetch all users.
+
+#### Errors
+
+- 500 - Could not query users.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+users?: User[]
+```
+
+### GET /users/:level
+
+Fetch users with a specific right level.
+Right levels are the following : 
+```typescript
+enum UserLevel {
+    Customer,
+    Preparator,
+    Admin,
+}
+```
+
+#### Errors
+
+- 400 - Provided authentification level is invalid.
+- 500 - Could not query users with level XXXXX.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+menu?: Menu[]
+```
+
+### get /user/:id
+
+get the user with the requested ID.
+
+#### Errors
+
+- 404 - User with ID XXXXX does not exist.
+- 500 - Could not query user.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+user?: User
+```
+
+### Get /user/email/:email
+
+Get the user with the requested email address.
+
+#### Errors
+
+- 404 - User with email example@domain.com does not exist.
+- 500 - Error while creating the product.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+user?: User
+```
+
+### PUT /user
+
+Update the currently connected user.
+
+#### Body data structure
+
+```ts
+firstname?: string
+lastname?: string
+password?: string
+```
+
+#### Errors
+
+- 500 - Could not modify user account.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+user?: User
+```
+
+### PUT /user/rights/:id
+
+Update the right of the specified user.
+
+#### Body data structure
+
+```ts
+level?: string
+```
+
+#### Errors
+
+- 500 - Could not modify user account.
+
+#### Response data structure
+
+```ts
+success: boolean
+error?: string
+user?: User
+```
+
 ## Products
 
 ### GET /products

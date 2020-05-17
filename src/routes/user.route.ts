@@ -11,6 +11,7 @@ import schema from '../middlewares/schema.middleware'
 
 
 import { UserLevel } from '../models/user.model'
+import { model } from 'mongoose'
 
 
 const levels: {[key:string]: models.user.UserLevel} = {
@@ -174,24 +175,6 @@ router.get('/user/email/:email', async (req, res) => {
     }
 })
 
-
-router.delete('/user', guard({ auth: true }), async (req, res) => {
-    try {
-        const id = req.user?._id
-        const user = await models.user.model.findByIdAndRemove(id)
-        
-        res.status(410).json({
-            success: true,
-            user: models.user.sanitize_user(user),
-        })
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ 
-            success: false,
-            error : "Could not delete user.",
-        })
-    }
-})
 
 //a user can change neither his mail adress nor his rights levels
 router.put('/user', guard({auth: true}),  schema({body: user_attrs_put_schema}),  async (req,res) => {
