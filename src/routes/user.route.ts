@@ -200,6 +200,13 @@ router.put('/user', guard({auth: true}),  schema({body: user_attrs_put_schema}),
 router.put('/user/rights/:id', guard({ allow: [UserLevel.Admin] }),  schema({body: user_level_put_schema}),  async (req,res) => {
     try {
         const id = req.params.id
+        const exists = models.user.model.exists({_id: id})
+        if (!exists) {
+            res.status(304).json({
+                success: false,
+                error:`User ${id} does not exist.`
+            })
+        }
         const user = await models.user.model.findByIdAndUpdate(id, {level : levels[req.body.level]});
         
         res.status(201).json({
