@@ -43,7 +43,8 @@ interface IMenuSelfPut {
     name?: string,
     products?: (db.Schema.Types.ObjectId | IProduct)[]
     price?: number
-    promotion: number
+    promotion?: number
+    featured?: boolean
 }
 
 router.get('/menus', async (req, res) => {

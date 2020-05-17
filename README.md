@@ -206,7 +206,7 @@ level?: string
 ```
 
 #### Errors
-
+- 304 - User XXXXXXXXXXX does not exist.
 - 500 - Could not modify user account.
 
 #### Response data structure
@@ -340,6 +340,16 @@ menu?: Menu
 
 Create a menu.
 
+#### Body data structure
+
+```ts
+name: string
+products: integer
+price: number
+promotion: integer
+featured: boolean
+```
+
 #### Errors
 
 - 400 - Product XXXXXXXXXX does not exist.
@@ -356,6 +366,16 @@ menu?: menu
 ### PUT /menus/:id
 
 update a menu's properties.
+
+#### Body data structure
+
+```ts
+name?: string
+products?: integer
+price?: number
+promotion?: integer
+featured?: boolean
+```
 
 #### Errors
 
