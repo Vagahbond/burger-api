@@ -10,6 +10,7 @@ import * as security from '../utils/security.utils'
 
 import guard from '../middlewares/guard.middleware'
 import schema, { SchemaError } from '../middlewares/schema.middleware'
+import { UserLevel } from '../models/user.model'
 
 interface IAuthRegisterPost {
     firstname: string
@@ -58,6 +59,7 @@ router.post('/auth/register', guard({ auth: false }), schema({ body: auth_regist
             lastname: data.lastname.trim().replace(/  +/g, ''),
             email: data.email,
             password: await security.hash(data.password),
+            level: UserLevel.Customer,
         })
 
         res.json({
