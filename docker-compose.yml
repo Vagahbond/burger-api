@@ -1,17 +1,14 @@
-version: "3"
+version: '3'
 services:
   api:
     build: .
     container_name: burger-api
-    volumes:
-      - .:/app
-      - /app/node_modules
     networks:
       - private
-    command: npm run dev
+    command: npm start
     env_file: .env
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - mongo
     links:
