@@ -33,7 +33,7 @@ export default (options: SchemasOptions) => async (req: Request, res: Response, 
         if ('details' in e) {
             return res.status(400).json({
                 success: false,
-                errors: (e as Joi.ValidationError).details.map(d => d.message),
+                errors: (e as Joi.ValidationError).details.map((d) => d.message),
             })
         }
 

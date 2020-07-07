@@ -1,8 +1,9 @@
 import { Router } from 'express'
-const router = Router()
-export default router
 
 import * as models from '../models'
+
+const router = Router()
+export default router
 
 router.get('/featured', async (req, res) => {
     try {
@@ -11,8 +12,8 @@ router.get('/featured', async (req, res) => {
 
         res.json({
             success: true,
-            products: products.map(p => models.product.sanitize_product(p)),
-            menus: menus.map(p => models.menu.sanitize_menu(p)),
+            products: products.map((p) => models.product.sanitize_product(p)),
+            menus: menus.map((p) => models.menu.sanitize_menu(p)),
         })
     } catch (err) {
         console.log(err)

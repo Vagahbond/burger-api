@@ -1,11 +1,12 @@
 import { Router } from 'express'
-const router = Router()
-export default router
 
 import Joi from '@hapi/joi'
 
 import * as models from '../models'
 import * as security from '../utils/security.utils'
+
+const router = Router()
+export default router
 
 interface ISetupPost {
     firstname: string
@@ -19,28 +20,28 @@ const setup_post_schema = Joi.object<ISetupPost>().options({
     stripUnknown: true,
 }).keys({
     firstname: Joi.string().pattern(/^[\p{L}\- ]{2,}$/u).required().messages({
-        'string.base': `'firstname' should be a string`,
-        'string.empty': `'firstname' cannot be empty`,
-        'string.pattern': `'firstname' is invalid`,
-        'any.required': `'firstname' is a required field`
+        'string.base': '\'firstname\' should be a string',
+        'string.empty': '\'firstname\' cannot be empty',
+        'string.pattern': '\'firstname\' is invalid',
+        'any.required': '\'firstname\' is a required field',
     }),
     lastname: Joi.string().pattern(/^[\p{L}\- ]{2,}$/u).required().messages({
-        'string.base': `'lastname' should be a string`,
-        'string.empty': `'lastname' cannot be empty`,
-        'string.pattern': `'lastname' is invalid`,
-        'any.required': `'lastname' is a required field`
+        'string.base': '\'lastname\' should be a string',
+        'string.empty': '\'lastname\' cannot be empty',
+        'string.pattern': '\'lastname\' is invalid',
+        'any.required': '\'lastname\' is a required field',
     }),
     email: Joi.string().email().required().messages({
-        'string.base': `'email' should be a string`,
-        'string.empty': `'email' cannot be empty`,
-        'string.email': `'email' is an invalid email address`,
-        'any.required': `'email' is a required field`
+        'string.base': '\'email\' should be a string',
+        'string.empty': '\'email\' cannot be empty',
+        'string.email': '\'email\' is an invalid email address',
+        'any.required': '\'email\' is a required field',
     }),
     password: Joi.string().min(5).required().messages({
-        'string.base': `'password' should be a string`,
-        'string.empty': `'password' cannot be empty`,
-        'string.min': `'password' should have a minimum length of {#limit}`,
-        'any.required': `'password' is a required field`
+        'string.base': '\'password\' should be a string',
+        'string.empty': '\'password\' cannot be empty',
+        'string.min': '\'password\' should have a minimum length of {#limit}',
+        'any.required': '\'password\' is a required field',
     }),
 })
 
@@ -71,13 +72,13 @@ router.post('/setup', async (req, res, next) => {
         if ('details' in e) {
             return res.status(400).json({
                 success: false,
-                errors: (e as Joi.ValidationError).details.map(d => d.message),
+                errors: (e as Joi.ValidationError).details.map((d) => d.message),
             })
         }
 
         res.status(500).json({
             success: false,
-            error: "Failed to setup."
+            error: 'Failed to setup.',
         })
     }
 })

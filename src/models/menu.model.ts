@@ -13,9 +13,9 @@ export interface IMenu {
 }
 
 export const schema = new db.Schema({
-    name: { type: String, required: true, },
+    name: { type: String, required: true },
     products: [{ type: db.Schema.Types.ObjectId, ref: 'Product', required: true }],
-    price: { type: Number, required: true, },
+    price: { type: Number, required: true },
     promotion: { type: Number, required: true, default: 0 },
     featured: { type: Boolean, required: true, default: false },
 })

@@ -1,6 +1,4 @@
 import { Router } from 'express'
-const router = Router()
-export default router
 
 import Joi from '@hapi/joi'
 
@@ -10,12 +8,15 @@ import { IProduct } from '../models/product.model'
 import guard from '../middlewares/guard.middleware'
 import { UserLevel } from '../models/user.model'
 
+const router = Router()
+export default router
+
 router.get('/products', async (req, res) => {
     try {
         const products = await models.product.model.find()
         res.json({
             success: true,
-            products: products.map(p => models.product.sanitize_product(p)),
+            products: products.map((p) => models.product.sanitize_product(p)),
         })
     } catch (err) {
         console.log(err)
@@ -47,7 +48,6 @@ router.get('/product/:id', async (req, res) => {
         })
     }
 })
-
 
 const create_product_schema = Joi.object({
     name: Joi.string()
@@ -94,7 +94,8 @@ router.post(
                 error: 'Unable to create product',
             })
         }
-    })
+    },
+)
 
 const product_put_schema = Joi.object({
     name: Joi.string()
@@ -158,4 +159,5 @@ router.put(
                 error: 'Unable to update product',
             })
         }
-    })
+    },
+)

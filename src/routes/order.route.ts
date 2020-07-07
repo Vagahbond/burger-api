@@ -1,7 +1,4 @@
 import { Router } from 'express'
-const router = Router()
-
-export default router
 
 import Joi from '@hapi/joi'
 
@@ -15,6 +12,10 @@ import { OrderStatus } from '../models/order.model'
 import { IProduct } from '../models/product.model'
 import { IMenu } from '../models/menu.model'
 
+const router = Router()
+
+export default router
+
 router.get('/orders', guard({
     allow: [UserLevel.Admin, UserLevel.Preparator],
 }), async (req, res) => {
@@ -27,13 +28,12 @@ router.get('/orders', guard({
             success: true,
             orders,
         })
-    }
-    catch (err) {
+    } catch (err) {
         console.error(err)
 
         res.status(500).json({
             succes: false,
-            error: 'Error while fetching orders.'
+            error: 'Error while fetching orders.',
         })
     }
 })
@@ -58,17 +58,16 @@ router.get(
                 success: true,
                 order,
             })
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err)
 
             res.status(500).json({
                 succes: false,
-                error: 'Error while fetching the order.'
+                error: 'Error while fetching the order.',
             })
         }
-    })
-
+    },
+)
 
 router.post('/orders/:id/cancel',
     schema({
@@ -90,13 +89,12 @@ router.post('/orders/:id/cancel',
             res.json({
                 success: true,
             })
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err)
 
             res.status(500).json({
                 succes: false,
-                error: 'Error while updating the order.'
+                error: 'Error while updating the order.',
             })
         }
     })
@@ -121,13 +119,12 @@ router.post('/orders/:id/done',
             res.json({
                 success: true,
             })
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err)
 
             res.status(500).json({
                 succes: false,
-                error: 'Error while updating the order.'
+                error: 'Error while updating the order.',
             })
         }
     })
@@ -152,14 +149,14 @@ router.post(
             const products = await models.product.model.find({
                 _id: {
                     $in: body.products,
-                }
+                },
             }).lean()
 
             const product_counter: { [key: string]: number } = {}
 
             if (products.length < body.products.length) {
                 for (const id of body.products) {
-                    if (!products.some(product => product._id === id)) {
+                    if (!products.some((product) => product._id === id)) {
                         return res.status(400).json({
                             success: false,
                             error: `Product with id '${id}' doesn't exists.`,
@@ -182,12 +179,12 @@ router.post(
             const menus = await models.menu.model.find({
                 _id: {
                     $in: body.menus,
-                }
+                },
             }).populate('products')
 
             if (menus.length < body.menus.length) {
                 for (const id of body.menus) {
-                    if (!menus.some(menu => menu._id === id)) {
+                    if (!menus.some((menu) => menu._id === id)) {
                         return res.status(400).json({
                             success: false,
                             error: `Menu with id '${id}' doesn't exists.`,
@@ -198,7 +195,7 @@ router.post(
 
             for (const menu of menus) {
                 for (const product of menu.products as IProduct[]) {
-                    const counter = product_counter['' + product._id] || product.count
+                    const counter = product_counter[`${product._id}`] || product.count
 
                     if (counter <= 0) {
                         return res.status(400).json({
@@ -207,7 +204,7 @@ router.post(
                         })
                     }
 
-                    product_counter['' + product._id] = counter - 1;
+                    product_counter[`${product._id}`] = counter - 1;
                 }
             }
 
@@ -220,20 +217,20 @@ router.post(
             const order = await models.order.model.create({
                 status: OrderStatus.InProgress,
                 customer: req.user?._id,
-                products: products.map<IProduct>(product => ({
+                products: products.map<IProduct>((product) => ({
                     name: product.name,
                     count: 1,
                     price: product.price,
                     promotion: product.promotion,
                 })),
-                menus: menus.map<IMenu>(menu => {
+                menus: menus.map<IMenu>((menu) => {
                     const products = menu.products as IProduct[]
 
                     return {
                         name: menu.name,
                         price: menu.price,
                         promotion: menu.promotion,
-                        products: products.map<IProduct>(product => ({
+                        products: products.map<IProduct>((product) => ({
                             name: product.name,
                             count: product.count,
                             price: product.price,
@@ -247,13 +244,13 @@ router.post(
                 success: true,
                 order,
             })
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err)
 
             res.status(500).json({
                 succes: false,
-                error: 'Error while creating the order.'
+                error: 'Error while creating the order.',
             })
         }
-    })
+    },
+)

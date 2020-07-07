@@ -11,15 +11,15 @@ after(async () => {
     await db.disconnect()
 })
 
-describe("Register a new user", () => {
+describe('Register a new user', () => {
     const credentials = {
         email: 'test@test.com',
         password: 'testpass',
     }
 
-    it("it should has status code 200", (done) => {
+    it('it should has status code 200', (done) => {
         supertest(app)
-            .post("/auth/register")
+            .post('/auth/register')
             .send({
                 firstname: 'Tester',
                 lastname: 'Test',
@@ -32,9 +32,9 @@ describe("Register a new user", () => {
             })
     })
 
-    it("login should give a token", (done) => {
+    it('login should give a token', (done) => {
         supertest(app)
-            .post("/auth/login")
+            .post('/auth/login')
             .send(credentials)
             .expect((res) => {
                 if (!res.body?.token) throw new Error('No token in response body.')

@@ -10,10 +10,10 @@ export interface IProduct {
 }
 
 export const schema = new db.Schema({
-    name: { type: String, required: true, },
-    count: { type: Number, required: true, },
-    price: { type: Number, required: true, },
-    promotion: { type: Number, required: true, },
+    name: { type: String, required: true },
+    count: { type: Number, required: true },
+    price: { type: Number, required: true },
+    promotion: { type: Number, required: true },
     featured: { type: Boolean, required: true, default: false },
 })
 

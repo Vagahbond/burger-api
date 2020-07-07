@@ -7,8 +7,8 @@ export interface IConfig {
 }
 
 export const schema = new db.Schema({
-    name: { type: String, required: true, },
-    value: { type: String, required: true, },
+    name: { type: String, required: true },
+    value: { type: String, required: true },
 })
 
 export const model = db.model<IConfig & db.Document>('Config', schema)

@@ -6,7 +6,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     if (!models.config.is_setup && req.url !== '/setup') {
         return res.status(401).send({
             success: false,
-            error: 'Setup needed.'
+            error: 'Setup needed.',
         })
     }
 
