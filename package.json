@@ -54,7 +54,7 @@
     "helmet": "^3.23.3",
     "mongoose": "^5.9.22",
     "typescript": "^3.9.6",
-    "validator": "^13.1.1",
+    "validator": "^13.7.0",
     "xregexp": "^4.3.0"
   }
 }
