@@ -50,7 +50,7 @@
     "@types/mocha": "^7.0.2",
     "argon2": "^0.26.2",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "helmet": "^3.23.3",
     "mongoose": "^5.9.22",
     "typescript": "^3.9.6",
